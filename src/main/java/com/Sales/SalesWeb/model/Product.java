@@ -1,28 +1,36 @@
 package com.Sales.SalesWeb.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
-
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.rmi.server.UID;
 
 @Entity
-@Table(name = "sales")
 @Data
-public class Sales {
+public class Product {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UID id;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "images_id")
+    private UID product_type_id;
+
+    private double price;
+
     private UID image_id;
+
+    private UID collection_id;
+
+    private UID delivery_id;
+
+    private UID properties_id;
+
+    private String type;
+
+
+
 }
