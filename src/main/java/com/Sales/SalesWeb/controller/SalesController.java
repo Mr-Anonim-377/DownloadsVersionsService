@@ -11,18 +11,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("sales")
-public class MessageController {
+public class SalesController {
 
 
 
     private final SalesRepository salesRepository;
     @Autowired
-    public MessageController(SalesRepository salesRepository) {
+    public SalesController(SalesRepository salesRepository) {
         this.salesRepository = salesRepository;
     }
 
     @GetMapping
-    public List<Sales> list()
+    public List<Sales> getSales()
     {
         return salesRepository.findAll();
     }
@@ -30,28 +30,27 @@ public class MessageController {
 
 
     @GetMapping("{id}")
-    public Sales getOne(@PathVariable("id") Sales sale){
+    public Sales getSale(@PathVariable("id") Sales sale){
         return sale;
     }
 
 
     @PostMapping
-    public Sales create(@RequestBody Sales sale){
+    public Sales createSale(@RequestBody Sales sale){
         return salesRepository.save(sale);
     }
 
 
     @PutMapping("{id}")
-    public Sales update (@PathVariable("id") Sales saleFromDb ,
+    public Sales updateSale(@PathVariable("id") Sales saleFromDb ,
                          @RequestBody Sales  saleFromUser){
         BeanUtils.copyProperties(saleFromUser,saleFromDb, "id");
     return salesRepository.save(saleFromDb);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Sales sale) {
+    public void deleteSale(@PathVariable("id") Sales sale) {
     salesRepository.delete(sale);
-
     }
 
 }
