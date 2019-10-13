@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.rmi.server.UID;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -13,21 +14,21 @@ public class Product {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UID id;
+    private UUID id;
 
     private String title;
 
-    private UID product_type_id;
+    private UUID product_type_id;
 
     private double price;
 
-    private UID image_id;
+    private UUID image_id;
 
-    private UID collection_id;
+    private UUID collection_id;
 
-    private UID delivery_id;
+    private UUID delivery_id;
 
-    private UID properties_id;
+    private UUID properties_id;
 
     private String type;
 
