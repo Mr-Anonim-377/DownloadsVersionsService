@@ -4,6 +4,7 @@ import com.Sales.SalesWeb.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
-public interface ImageRepository extends JpaRepository <Image, BigInteger>{
+public interface ImageRepository extends JpaRepository <Image, UUID>{
 }

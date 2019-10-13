@@ -1,14 +1,8 @@
 package com.Sales.SalesWeb.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.rmi.server.UID;
 import java.util.UUID;
 
 @Entity
@@ -26,4 +20,5 @@ public class Sales {
 
     @Column(name = "images_id")
     private UUID image_id;
+
 }
