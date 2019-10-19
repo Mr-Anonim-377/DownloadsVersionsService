@@ -6,7 +6,6 @@ import com.Sales.SalesWeb.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -14,9 +13,8 @@ import java.util.List;
 @RequestMapping("products")
 public class ProductController {
 
-
-
     private final ProductRepository productRepository;
+
     @Autowired
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -24,26 +22,25 @@ public class ProductController {
 
 
     @GetMapping
-    public List<Product> getAllProducts(){
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
 
-
     @GetMapping("{id}")
-    public Product getProduct(@PathVariable("id") Product product){
+    public Product getProduct(@PathVariable("id") Product product) {
         return product;
     }
 
 
-    @PostMapping(value = "create",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product createProduct(@RequestBody Product product){
+    @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Product createProduct(@RequestBody Product product) {
 
         return productRepository.save(product);
     }
 
     @PostMapping("delete/{id}")
-    public String deleteProduct(@PathVariable("id") Product product){
+    public String deleteProduct(@PathVariable("id") Product product) {
         productRepository.delete(product);
         return "{type:sucsessfull}";
     }
