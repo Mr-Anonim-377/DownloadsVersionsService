@@ -1,9 +1,11 @@
 package com.Sales.SalesWeb.controller;
 
 
+import com.Sales.SalesWeb.model.POJO.PostDefaultResponse;
 import com.Sales.SalesWeb.model.Product;
 import com.Sales.SalesWeb.repository.ProductRepository;
-import net.minidev.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +19,8 @@ import java.util.List;
 public class ProductController {
 
 
-
     private final ProductRepository productRepository;
+
     @Autowired
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -26,30 +28,46 @@ public class ProductController {
 
 
     @GetMapping
-    public List<Product> getAllProducts(){
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
 
-
     @GetMapping("{id}")
-    public Product getProduct(@PathVariable("id") Product product){
+    public Product getProduct(@PathVariable("id") Product product) {
         return product;
     }
 
 
-    @PostMapping(value = "create",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product createProduct(@RequestBody Product product){
+    @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> createProduct(@RequestBody Product product) throws JsonProcessingException {
 
-        return productRepository.save(product);
+        PostDefaultResponse postDefaultResponse = new PostDefaultResponse();
+        ObjectMapper mapper = new ObjectMapper();
+
+        postDefaultResponse.setProduct(product);
+        postDefaultResponse.setSucsessfull(true);
+
+        productRepository.save(product);
+
+        mapper.writeValueAsString(postDefaultResponse);
+
+        return new ResponseEntity<String>(mapper.writeValueAsString(postDefaultResponse), HttpStatus.OK);
     }
 
-    @PostMapping(value = "delete/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> deleteProduct(@PathVariable("id") Product product){
+    @PostMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Product product) throws JsonProcessingException {
         productRepository.delete(product);
 
+        PostDefaultResponse postDefaultResponse = new PostDefaultResponse();
+        ObjectMapper mapper = new ObjectMapper();
 
-        return new ResponseEntity<Product>(product,HttpStatus.OK);
+        postDefaultResponse.setProduct(product);
+        postDefaultResponse.setSucsessfull(true);
+
+        mapper.writeValueAsString(postDefaultResponse);
+
+        return new ResponseEntity<>(mapper.writeValueAsString(postDefaultResponse), HttpStatus.OK);
     }
 
 }
