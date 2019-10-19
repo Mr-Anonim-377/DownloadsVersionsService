@@ -13,7 +13,7 @@ public class Sales {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private Integer id;
 
     @Column(name = "title")
     private String title;
