@@ -3,10 +3,12 @@ package com.Sales.SalesWeb.controller;
 
 import com.Sales.SalesWeb.model.Product;
 import com.Sales.SalesWeb.repository.ProductRepository;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -42,10 +44,12 @@ public class ProductController {
         return productRepository.save(product);
     }
 
-    @PostMapping("delete/{id}")
-    public String deleteProduct(@PathVariable("id") Product product){
+    @PostMapping(value = "delete/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Product> deleteProduct(@PathVariable("id") Product product){
         productRepository.delete(product);
-        return "{type:sucsessfull}";
+
+
+        return new ResponseEntity<Product>(product,HttpStatus.OK);
     }
 
 }
