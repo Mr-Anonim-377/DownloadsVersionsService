@@ -16,13 +16,13 @@ public class Product {
 
     private String title;
 
-    private UUID product_type_id;
+    private Integer product_type_id;
 
     private double price;
 
     private UUID image_id;
 
-    private UUID collection_id;
+    private Integer collection_id;
 
     private UUID delivery_id;
 

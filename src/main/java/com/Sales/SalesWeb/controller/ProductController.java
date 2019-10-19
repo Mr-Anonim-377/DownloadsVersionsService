@@ -6,6 +6,7 @@ import com.Sales.SalesWeb.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -36,9 +37,9 @@ public class ProductController {
 
 
     @PostMapping(value = "create",produces = MediaType.APPLICATION_JSON_VALUE)
-    public String createProduct(@RequestBody Product product){
+    public Product createProduct(@RequestBody Product product){
 
-        return productRepository.save(product).toString();
+        return productRepository.save(product);
     }
 
     @PostMapping("delete/{id}")
