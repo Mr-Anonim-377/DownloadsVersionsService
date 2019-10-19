@@ -12,11 +12,11 @@ public class Image {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-        private UUID id;
+    private UUID id;
 
-        @Column(name = "image")
-        private String image;
+    @Column(name = "image")
+    private String image;
 
-    }
+}
 
 
