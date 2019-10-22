@@ -9,6 +9,10 @@
 
 Скрипт для создания таблиц для базы находятся в дерриктории res.
 
+# BD
+Ссылки на bd.md
+https://github.com/Mr-Anonim-377/Sales/blob/master/db.md
+
 # Используемые технологии
 
 - Spring data; Spring Boot; Spring MVC;
