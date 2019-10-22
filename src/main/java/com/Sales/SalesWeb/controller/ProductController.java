@@ -41,6 +41,7 @@ public class ProductController {
 
 
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
+
     public ResponseEntity<PostDefaultResponse> createProduct(@RequestBody Product product) throws JsonProcessingException {
 
         PostDefaultResponse postDefaultResponse = new PostDefaultResponse();
@@ -51,11 +52,14 @@ public class ProductController {
         }
 
 
+
         return new ResponseEntity<PostDefaultResponse>(postDefaultResponse, HttpStatus.OK);
     }
 
+
     @PostMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostDefaultResponse> deleteProduct(@PathVariable("id") Product product) throws JsonProcessingException {
+
         productRepository.delete(product);
 
         PostDefaultResponse postDefaultResponse = new PostDefaultResponse();

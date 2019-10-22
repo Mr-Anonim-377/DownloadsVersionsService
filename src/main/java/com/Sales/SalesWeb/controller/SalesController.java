@@ -14,43 +14,41 @@ import java.util.List;
 public class SalesController {
 
 
-
     private final SalesRepository salesRepository;
+
     @Autowired
     public SalesController(SalesRepository salesRepository) {
         this.salesRepository = salesRepository;
     }
 
     @GetMapping
-    public List<Sales> getSales()
-    {
+    public List<Sales> getSales() {
         return salesRepository.findAll();
     }
 
 
-
     @GetMapping("{id}")
-    public Sales getSale(@PathVariable("id") Sales sale){
+    public Sales getSale(@PathVariable("id") Sales sale) {
         return sale;
     }
 
 
     @PostMapping
-    public Sales createSale(@RequestBody Sales sale){
+    public Sales createSale(@RequestBody Sales sale) {
         return salesRepository.save(sale);
     }
 
 
     @PutMapping("{id}")
-    public Sales updateSale(@PathVariable("id") Sales saleFromDb ,
-                         @RequestBody Sales  saleFromUser){
-        BeanUtils.copyProperties(saleFromUser,saleFromDb, "id");
-    return salesRepository.save(saleFromDb);
+    public Sales updateSale(@PathVariable("id") Sales saleFromDb,
+                            @RequestBody Sales saleFromUser) {
+        BeanUtils.copyProperties(saleFromUser, saleFromDb, "id");
+        return salesRepository.save(saleFromDb);
     }
 
     @DeleteMapping("{id}")
     public void deleteSale(@PathVariable("id") Sales sale) {
-    salesRepository.delete(sale);
+        salesRepository.delete(sale);
     }
 
 }
