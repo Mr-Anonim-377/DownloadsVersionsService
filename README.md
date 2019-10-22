@@ -12,7 +12,7 @@
 - Spring data; Spring Boot; Spring MVC;
 - Java 12
 - Gradle
-- lombo
+- lombok
 - Postgresql
 - Jackson
 # Основной функционал
