@@ -24,7 +24,9 @@ repositories {
 
 dependencies {
 	compile('org.projectlombok:lombok')
-    	implementation "javax.xml.bind:jaxb-api:2.2.11"
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.3'
+    implementation "javax.xml.bind:jaxb-api:2.2.11"
     	implementation "com.sun.xml.bind:jaxb-core:2.2.11"
     	implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
     	implementation "javax.activation:activation:1.1.1"
