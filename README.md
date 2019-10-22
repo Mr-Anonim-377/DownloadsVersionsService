@@ -21,6 +21,5 @@
  
 # Дизайн и Фронт 
 
-Макет интервейса будущего веб приложения можно посмотреть тут - https://www.figma.com/file/4zcZikjqgZCdKAIAZUG22i/Untitled?node-id=43%3A0
-
+Макет интервейса будущего веб приложения можно посмотреть тут - https://www.figma.com/file/4zcZikjqgZCdKAIAZUG22i/Untitled
 В скором будущем тут будет ссылка на стенд с развернутым функционалом 
