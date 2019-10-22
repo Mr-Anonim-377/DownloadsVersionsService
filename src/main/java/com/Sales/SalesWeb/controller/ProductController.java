@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -40,34 +41,29 @@ public class ProductController {
 
 
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createProduct(@RequestBody Product product) throws JsonProcessingException {
+    public ResponseEntity<PostDefaultResponse> createProduct(@RequestBody Product product) throws JsonProcessingException {
 
         PostDefaultResponse postDefaultResponse = new PostDefaultResponse();
-        ObjectMapper mapper = new ObjectMapper();
+        try {
+            productRepository.save(product);
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
 
-        postDefaultResponse.setProduct(product);
-        postDefaultResponse.setSucsessfull(true);
 
-        productRepository.save(product);
-
-        mapper.writeValueAsString(postDefaultResponse);
-
-        return new ResponseEntity<String>(mapper.writeValueAsString(postDefaultResponse), HttpStatus.OK);
+        return new ResponseEntity<PostDefaultResponse>(postDefaultResponse, HttpStatus.OK);
     }
 
     @PostMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Product product) throws JsonProcessingException {
+    public ResponseEntity<PostDefaultResponse> deleteProduct(@PathVariable("id") Product product) throws JsonProcessingException {
         productRepository.delete(product);
 
         PostDefaultResponse postDefaultResponse = new PostDefaultResponse();
-        ObjectMapper mapper = new ObjectMapper();
 
         postDefaultResponse.setProduct(product);
         postDefaultResponse.setSucsessfull(true);
 
-        mapper.writeValueAsString(postDefaultResponse);
-
-        return new ResponseEntity<>(mapper.writeValueAsString(postDefaultResponse), HttpStatus.OK);
+        return new ResponseEntity<PostDefaultResponse>(postDefaultResponse, HttpStatus.OK);
     }
 
 }

@@ -2,6 +2,8 @@
 CREATE DATABASE Sales OWNER postgres;
 GRANT ALL privileges ON DATABASE Sales TO postgres;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION "pgcrypto";
 
 -- Создание таблиц  TODO (В разработке)
 
@@ -11,12 +13,12 @@ create table if not exists product
         constraint product_pkey
             primary key,
     title           text,
-    product_type_id integer,
+    product_type_id INTEGER,
     price           double precision,
     image_id        uuid,
-    colection_id    integer,
+    collection_id    INTEGER,
     delivery_id     uuid,
-    properties_id   uuid,
+    properties_id   INTEGER,
     type            text
 );
 
@@ -59,6 +61,7 @@ create table if not exists person
 alter table person
     owner to postgres;
 
+
 create table if not exists "user"
 (
     id            uuid default gen_random_uuid() not null
@@ -73,14 +76,169 @@ create table if not exists "user"
 alter table "user"
     owner to postgres;
 
+
+create table if not exists order
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    is_payment BOOLEAN,
+    payment_type text,
+    order_delivery_id uuid,
+    statys text,
+    user_id uuid
+
+);
+
+alter table order
+    owner to postgres;
+
+create table if not exists order_review
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    title text,
+    user_id uuid,
+    marks Integer,
+    order_id uuid
+);
+
+alter table order_review
+    owner to postgres;
+
+create table if not exists order_delivery
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    statys text,
+    address text,
+    date timestamp
+
+);
+
+alter table order_delivery
+    owner to postgres;
+
+create table if not exists site_review
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    title text,
+    user_id uuid,
+    marks Integer
+
+);
+
+alter table site_review
+    owner to postgres;
+
+create table if not exists product_review_product
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    product_id uuid,
+    product_review_id uuid
+
+);
+
+alter table product_review_product
+    owner to postgres;
+
+create table if not exists product_review
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    title text,
+    user_id uuid,
+    marks Integer
+
+);
+
+alter table product_review
+    owner to postgres;
+
+create table if not exists product_delivery
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    possible_delivery BOOLEAN,
+    sale_delivery DOUBLE PRECISION
+
+);
+
+alter table product_delivery
+    owner to postgres;
+
+create table if not exists product_type
+(
+    id        serial not null
+        constraint sales_pkey
+            primary key,
+    title text,
+    description text
+
+);
+
+alter table product_type
+    owner to postgres;
+
+
+create table if not exists sales_product
+(
+    id              uuid default gen_random_uuid() not null
+        constraint product_pkey
+            primary key,
+    sales_id INTEGER,
+    product_id uuid
+
+);
+
+alter table sales_product
+    owner to postgres;
+
+
+create table if not exists properties
+(
+    id        serial not null
+        constraint sales_pkey
+            primary key,
+    title text,
+    conventional_units uuid
+
+);
+
+alter table properties
+    owner to postgres;
+
+create table if not exists baners
+(
+    id        serial not null
+        constraint sales_pkey
+            primary key,
+    image_id uuid,
+    title text
+
+);
+
+alter table baners
+    owner to postgres;
+
+
+
 -- Создание тестовых данных TODO (В разработке)
 INSERT INTO public.sales (id, title, images_id)
-VALUES (1, 'Скидка 90% на все ', '10c3de72-fe8a-45e8-a90b-6aef99e4af19');
+VALUES ('e27050aa-16be-4c85-a298-5bbf4f0d3e6d', 'Скидка 90% на все ', '10c3de72-fe8a-45e8-a90b-6aef99e4af19');
 INSERT INTO public.sales (id, title, images_id)
-VALUES (2, 'скидка 10% на покупку от 1000 рублей',
+VALUES ('06aee656-fb29-4541-b28b-d4d915320ba6', 'скидка 10% на покупку от 1000 рублей',
         '11eb2f39-7337-4fc7-a59a-806bd45800ba');
 INSERT INTO public.sales (id, title, images_id)
-VALUES (3, 'купи один,получи второй в подарок',
+VALUES ('5fb312b2-457c-4e83-bc0b-e2dc9a598721', 'купи один,получи второй в подарок',
         'c11c38bc-f5d1-4869-8989-67b3670558ae');
 
 
