@@ -5,6 +5,7 @@ GRANT ALL privileges ON DATABASE Sales TO postgres;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION "pgcrypto";
 
+CREATE SCHEMA pub;
 -- Создание таблиц  TODO (В разработке)
 
 create table if not exists product
@@ -230,8 +231,38 @@ alter table baners
     owner to postgres;
 
 
+ALTER TABLE "user" ADD CONSTRAINT "user_fk0" FOREIGN KEY ("person_id") REFERENCES "person"("id");
+ALTER TABLE "user" ADD CONSTRAINT "user_fk1" FOREIGN KEY ("imager_id") REFERENCES "images"("id");
+
+
+ALTER TABLE "site_review" ADD CONSTRAINT "site_review_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
+
+ALTER TABLE "product_review_product" ADD CONSTRAINT "product_review_product_fk0" FOREIGN KEY ("product_id") REFERENCES "product"("id");
+ALTER TABLE "product_review_product" ADD CONSTRAINT "product_review_product_fk1" FOREIGN KEY ("product_review_id") REFERENCES "product_review"("id");
+
+
+ALTER TABLE "sales_product" ADD CONSTRAINT "sales_product_fk0" FOREIGN KEY ("sales_id") REFERENCES "sales"("id");
+ALTER TABLE "sales_product" ADD CONSTRAINT "sales_product_fk1" FOREIGN KEY ("product_id") REFERENCES "product"("id");
+
+ALTER TABLE "product" ADD CONSTRAINT "product_fk0" FOREIGN KEY ("product_type_id") REFERENCES "product_type"("id");
+ALTER TABLE "product" ADD CONSTRAINT "product_fk1" FOREIGN KEY ("image_id") REFERENCES "images"("id");
+ALTER TABLE "product" ADD CONSTRAINT "product_fk2" FOREIGN KEY ("delivery_id") REFERENCES "product_delivery"("id");
+
+ALTER TABLE "sales" ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("images_id") REFERENCES "images"("id");
+
+
+
+ALTER TABLE "order" ADD CONSTRAINT "order_fk0" FOREIGN KEY ("order_delivery_id") REFERENCES "order_delivery"("id");
+ALTER TABLE "order" ADD CONSTRAINT "order_fk1" FOREIGN KEY ("user_id") REFERENCES "user"("id");
+
+ALTER TABLE "order_review" ADD CONSTRAINT "order_review_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
+ALTER TABLE "order_review" ADD CONSTRAINT "order_review_fk1" FOREIGN KEY ("order_id") REFERENCES "order"("id");
+
+ALTER TABLE "baners" ADD CONSTRAINT "baners_fk0" FOREIGN KEY ("image_id") REFERENCES "images"("id");
+
 
 -- Создание тестовых данных TODO (В разработке)
+
 INSERT INTO public.sales (id, title, images_id)
 VALUES ('e27050aa-16be-4c85-a298-5bbf4f0d3e6d', 'Скидка 90% на все ', '10c3de72-fe8a-45e8-a90b-6aef99e4af19');
 INSERT INTO public.sales (id, title, images_id)
