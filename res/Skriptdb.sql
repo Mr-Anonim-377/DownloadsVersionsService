@@ -14,7 +14,7 @@ create table if not exists product
             primary key,
     title           text,
     product_type_id INTEGER default null,
-    price           double precision,
+    price           Double precision,
     image_id        uuid    default null,
     collection_id   INTEGER default null,
     delivery_id     uuid    default null,

@@ -1,6 +1,8 @@
 package com.Sales.SalesWeb.model;
 
+import com.google.gson.JsonObject;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -18,7 +20,7 @@ public class Product {
 
     private Integer product_type_id;
 
-    private double price;
+    private Double price;
 
     private UUID image_id;
 
@@ -26,7 +28,9 @@ public class Product {
 
     private UUID delivery_id;
 
-    private UUID properties_id;
+    @Column(name = "properties")
+    @Type(type = "com.Sales.SalesWeb.model.DataType.JsonType")
+    private JsonObject properties;
 
     private String type;
 
