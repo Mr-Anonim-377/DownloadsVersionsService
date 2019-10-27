@@ -9,16 +9,16 @@ CREATE EXTENSION "pgcrypto";
 
 create table if not exists product
 (
-    id              uuid default gen_random_uuid() not null
+    id              uuid    default gen_random_uuid() not null
         constraint product_pkey
             primary key,
     title           text,
-    product_type_id INTEGER,
+    product_type_id INTEGER default null,
     price           double precision,
-    image_id        uuid,
-    collection_id   INTEGER,
-    delivery_id     uuid,
-    properties_id   INTEGER,
+    image_id        uuid    default null,
+    collection_id   INTEGER default null,
+    delivery_id     uuid    default null,
+    properties      json    default null,
     type            text
 );
 
@@ -42,7 +42,7 @@ create table if not exists images
     id    uuid default gen_random_uuid() not null
         constraint images_pkey
             primary key,
-    image text
+    image text                           not null
 );
 
 alter table images
@@ -83,10 +83,10 @@ create table if not exists "order"
         constraint order_pkey
             primary key,
     is_payment        BOOLEAN,
-    payment_type      text,
-    order_delivery_id uuid,
+    payment_type      text                           not null,
+    order_delivery_id uuid default null,
     statys            text,
-    user_id           uuid
+    user_id           uuid                           not null
 
 );
 
@@ -98,10 +98,10 @@ create table if not exists order_review
     id       uuid default gen_random_uuid() not null
         constraint order_review_pkey
             primary key,
-    title    text,
+    title    text                           not null,
     user_id  uuid,
     marks    Integer,
-    order_id uuid
+    order_id uuid                           not null
 );
 
 alter table order_review
@@ -112,7 +112,7 @@ create table if not exists order_delivery
     id      uuid default gen_random_uuid() not null
         constraint order_delivery_pkey
             primary key,
-    statys  text,
+    status  text,
     address text,
     date    timestamp
 
@@ -126,7 +126,7 @@ create table if not exists site_review
     id      uuid default gen_random_uuid() not null
         constraint site_review_pkey
             primary key,
-    title   text,
+    title   text                           not null,
     user_id uuid,
     marks   Integer
 
@@ -140,8 +140,8 @@ create table if not exists product_review_product
     id                uuid default gen_random_uuid() not null
         constraint product_review_product_pkey
             primary key,
-    product_id        uuid,
-    product_review_id uuid
+    product_id        uuid                           not null,
+    product_review_id uuid                           not null
 
 );
 
@@ -153,7 +153,7 @@ create table if not exists product_review
     id      uuid default gen_random_uuid() not null
         constraint product_review_pkey
             primary key,
-    title   text,
+    title   text                           not null,
     user_id uuid,
     marks   Integer
 
@@ -194,26 +194,12 @@ create table if not exists sales_product
     id         uuid default gen_random_uuid() not null
         constraint sales_product_pkey
             primary key,
-    sales_id   INTEGER,
-    product_id uuid
+    sales_id   INTEGER                        not null,
+    product_id uuid                           not null
 
 );
 
 alter table sales_product
-    owner to postgres;
-
-
-create table if not exists properties
-(
-    id                 serial not null
-        constraint properties_pkey
-            primary key,
-    title              text,
-    conventional_units uuid
-
-);
-
-alter table properties
     owner to postgres;
 
 create table if not exists baners
@@ -221,8 +207,8 @@ create table if not exists baners
     id       serial not null
         constraint baners_pkey
             primary key,
-    image_id uuid,
-    title    text
+    image_id uuid   not null,
+    title    text default null
 
 );
 
