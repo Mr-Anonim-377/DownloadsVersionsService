@@ -47,8 +47,8 @@ public class ProductController {
         long countNotNullJsonParam = gson.toJsonTree(product)
                 .getAsJsonObject()
                 .entrySet()
-                .stream().
-                filter(jObj -> !jObj.getValue().isJsonNull()).count();
+                .stream()
+                .filter(jObj -> !jObj.getValue().isJsonNull()).count();
         try {
             if (countNotNullJsonParam == 0) {
                 Map<String, Object> response = new HashMap<String, Object>();
@@ -60,7 +60,9 @@ public class ProductController {
                 return new ResponseEntity<>(save, HttpStatus.OK);
             }
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getStackTrace(), HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, Object> response = new HashMap<String, Object>();
+            response.put("Error", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
 

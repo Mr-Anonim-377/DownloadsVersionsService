@@ -1,5 +1,6 @@
 package com.Sales.SalesWeb.model;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import org.hibernate.annotations.Type;
@@ -28,10 +29,10 @@ public class Product {
 
     private UUID delivery_id;
 
-    @Column(name = "properties")
-    @Type(type = "com.Sales.SalesWeb.model.DataType.JsonType")
-    private JsonObject properties;
+//    @Column(name = "properties")
+//    @Type(type = "com.Sales.SalesWeb.model.DataType.JsonType")
+//    private JsonElement properties;
+    private String properties;
 
     private String type;
-
 }
