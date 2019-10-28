@@ -27,57 +27,67 @@ public class ProductController {
         gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     }
 
-
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         return new ResponseEntity<>(productRepository.findAll(), HttpStatus.OK);
 
     }
 
-
     @GetMapping("{id}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") Product product) {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
-
-        long countNotNullJsonParam = gson.toJsonTree(product)
-                .getAsJsonObject()
-                .entrySet()
-                .stream()
-                .filter(jObj -> !jObj.getValue().isJsonNull()).count();
         try {
-            if (countNotNullJsonParam == 0) {
-                Map<String, Object> response = new HashMap<String, Object>();
-                response.put("RequestJson", product);
-                response.put("Error", "Не верная валидация входных параметров Json обьекта");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            if (isNullJsonOject(product)) {
+                return new ResponseEntity<>(nullObjectResponse(product, "Передан пустой обьект"),
+                        HttpStatus.BAD_REQUEST);
             } else {
                 Product save = productRepository.save(product);
                 return new ResponseEntity<>(save, HttpStatus.OK);
             }
         } catch (RuntimeException e) {
-            Map<String, Object> response = new HashMap<String, Object>();
-            response.put("Error", e.getMessage());
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-
     }
 
+    private boolean isNullJsonOject(Object object) {
+        System.out.println("ereqrere");
+        long countNotNullJsonParam = gson.toJsonTree(object)
+                .getAsJsonObject()
+                .entrySet()
+                .stream()
+                .filter(jObj -> !jObj.getValue().isJsonNull()).count();
+        return countNotNullJsonParam == 0;
+    }
+
+    private Map<String, Object> nullObjectResponse(Object obj, String errorString) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", errorString);
+        response.put("jsonObject", obj);
+        return response;
+    }
 
     @PostMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> deleteProduct(@PathVariable("id") Product product) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable("id") Product product) {
         try {
-            productRepository.delete(product);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(product, HttpStatus.NOT_FOUND);
+            if (isNullJsonOject(product)) {
+                return new ResponseEntity<>(nullObjectResponse(product, "Передан пустой обьект"),
+                        HttpStatus.BAD_REQUEST);
+            } else {
+                productRepository.delete(product);
+                return new ResponseEntity<>(new HashMap<String,String>().put("successful", "true"),
+                        HttpStatus.OK);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(new HashMap<String,String>().put("error", e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
 
     }
 
