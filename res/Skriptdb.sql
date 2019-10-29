@@ -6,253 +6,287 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION "pgcrypto";
 
 -- Создание таблиц  TODO (В разработке)
-
-create table if not exists product
+CREATE TABLE "baners"
 (
-    id              uuid    default gen_random_uuid() not null
-        constraint product_pkey
-            primary key,
-    title           text,
-    product_type_id INTEGER default null,
-    price           Double precision,
-    image_id        uuid    default null,
-    collection_id   INTEGER default null,
-    delivery_id     uuid    default null,
-    properties      json    default null,
-    type            text
-);
+    "id"       float8 NOT NULL DEFAULT nextval('baners_id_seq'::regclass),
+    "image_id" uuid   NOT NULL,
+    "title"    text COLLATE "default",
+    CONSTRAINT "baners_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "baners"
+    OWNER TO "postgres";
 
-alter table product
-    owner to postgres;
-
-create table if not exists sales
+CREATE TABLE "images"
 (
-    id        serial not null
-        constraint sales_pkey
-            primary key,
-    title     text   not null,
-    images_id uuid   not null
-);
+    "id"          uuid                   NOT NULL DEFAULT gen_random_uuid(),
+    "image_patch" text COLLATE "default" NOT NULL,
+    CONSTRAINT "images_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "images"
+    OWNER TO "postgres";
 
-alter table sales
-    owner to postgres;
-
-create table if not exists images
+CREATE TABLE "orders"
 (
-    id    uuid default gen_random_uuid() not null
-        constraint images_pkey
-            primary key,
-    image text                           not null
-);
+    "id"                uuid                   NOT NULL DEFAULT gen_random_uuid(),
+    "is_payment"        bool,
+    "payment_type"      text COLLATE "default" NOT NULL,
+    "order_delivery_id" uuid,
+    "statys"            text COLLATE "default",
+    "user_id"           uuid                   NOT NULL,
+    CONSTRAINT "order_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "orders"
+    OWNER TO "postgres";
 
-alter table images
-    owner to postgres;
-
-create table if not exists person
+CREATE TABLE "orders_delivery"
 (
-    id     uuid default gen_random_uuid() not null
-        constraint person_pkey
-            primary key,
-    phone  text,
-    f_name text                           not null,
-    l_name text                           not null
-);
+    "id"      uuid NOT NULL DEFAULT gen_random_uuid(),
+    "status"  text COLLATE "default",
+    "address" text COLLATE "default",
+    "date"    timestamp(6),
+    CONSTRAINT "order_delivery_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "orders_delivery"
+    OWNER TO "postgres";
 
-alter table person
-    owner to postgres;
-
-
-create table if not exists "user"
+CREATE TABLE "order_reviews"
 (
-    id            uuid default gen_random_uuid() not null
-        constraint user_pkey
-            primary key,
-    person_id     uuid                           not null,
-    email         text                           not null,
-    imager_id     uuid,
-    passvord_hash text                           not null
-);
+    "id"          uuid NOT NULL DEFAULT gen_random_uuid(),
+    "title"       text COLLATE "default",
+    "user_id"     uuid NOT NULL,
+    "mark"        int4 NOT NULL,
+    "order_id"    uuid NOT NULL,
+    "description" text,
+    CONSTRAINT "order_review_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "order_reviews"
+    OWNER TO "postgres";
 
-alter table "user"
-    owner to postgres;
-
-
-create table if not exists "order"
+CREATE TABLE "persons"
 (
-    id                uuid default gen_random_uuid() not null
-        constraint order_pkey
-            primary key,
-    is_payment        BOOLEAN,
-    payment_type      text                           not null,
-    order_delivery_id uuid default null,
-    statys            text,
-    user_id           uuid                           not null
+    "id"     uuid                   NOT NULL DEFAULT gen_random_uuid(),
+    "phone"  text COLLATE "default",
+    "f_name" text COLLATE "default" NOT NULL,
+    "l_name" text COLLATE "default" NOT NULL,
+    CONSTRAINT "person_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "persons"
+    OWNER TO "postgres";
 
-);
-
-alter table "order"
-    owner to postgres;
-
-create table if not exists order_review
+CREATE TABLE "products"
 (
-    id       uuid default gen_random_uuid() not null
-        constraint order_review_pkey
-            primary key,
-    title    text                           not null,
-    user_id  uuid,
-    marks    Integer,
-    order_id uuid                           not null
-);
+    "id"                  uuid                   NOT NULL DEFAULT gen_random_uuid(),
+    "title"               text COLLATE "default" NOT NULL,
+    "product_category_id" int4                   NOT NULL,
+    "price"               float8                 NOT NULL,
+    "image_id"            uuid                   NOT NULL,
+    "collection_id"       int4,
+    "delivery_id"         uuid,
+    "properties"          text COLLATE "default" NOT NULL,
+    "description"         text COLLATE "default",
+    CONSTRAINT "product_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "products"
+    OWNER TO "postgres";
 
-alter table order_review
-    owner to postgres;
-
-create table if not exists order_delivery
+CREATE TABLE "products_delivery"
 (
-    id      uuid default gen_random_uuid() not null
-        constraint order_delivery_pkey
-            primary key,
-    status  text,
-    address text,
-    date    timestamp
+    "id"                uuid NOT NULL DEFAULT gen_random_uuid(),
+    "possible_delivery" bool,
+    "sale_delivery"     float8,
+    CONSTRAINT "product_delivery_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "products_delivery"
+    OWNER TO "postgres";
 
-);
-
-alter table order_delivery
-    owner to postgres;
-
-create table if not exists site_review
+CREATE TABLE "product_reviews"
 (
-    id      uuid default gen_random_uuid() not null
-        constraint site_review_pkey
-            primary key,
-    title   text                           not null,
-    user_id uuid,
-    marks   Integer
+    "id"          uuid NOT NULL DEFAULT gen_random_uuid(),
+    "title"       text COLLATE "default",
+    "user_id"     uuid NOT NULL,
+    "mark"        int4 NOT NULL,
+    "description" text,
+    CONSTRAINT "product_review_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "product_reviews"
+    OWNER TO "postgres";
 
-);
-
-alter table site_review
-    owner to postgres;
-
-create table if not exists product_review_product
+CREATE TABLE "product_review_products"
 (
-    id                uuid default gen_random_uuid() not null
-        constraint product_review_product_pkey
-            primary key,
-    product_id        uuid                           not null,
-    product_review_id uuid                           not null
+    "id"                uuid NOT NULL DEFAULT gen_random_uuid(),
+    "product_id"        uuid NOT NULL,
+    "product_review_id" uuid NOT NULL,
+    CONSTRAINT "product_review_product_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "product_review_products"
+    OWNER TO "postgres";
 
-);
-
-alter table product_review_product
-    owner to postgres;
-
-create table if not exists product_review
+CREATE TABLE "collections"
 (
-    id      uuid default gen_random_uuid() not null
-        constraint product_review_pkey
-            primary key,
-    title   text                           not null,
-    user_id uuid,
-    marks   Integer
+    "id"          int4 NOT NULL DEFAULT nextval('product_type_id_seq'::regclass),
+    "title"       text COLLATE "default",
+    "description" text COLLATE "default",
+    CONSTRAINT "product_type_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "collections"
+    OWNER TO "postgres";
 
-);
-
-alter table product_review
-    owner to postgres;
-
-create table if not exists product_delivery
+CREATE TABLE "sales"
 (
-    id                uuid default gen_random_uuid() not null
-        constraint product_delivery_pkey
-            primary key,
-    possible_delivery BOOLEAN,
-    sale_delivery     DOUBLE PRECISION
-
-);
-
-alter table product_delivery
-    owner to postgres;
-
-create table if not exists product_type
-(
-    id          serial not null
-        constraint product_type_pkey
-            primary key,
-    title       text,
-    description text
-
-);
-
-alter table product_type
-    owner to postgres;
-
-
-create table if not exists sales_product
-(
-    id         uuid default gen_random_uuid() not null
-        constraint sales_product_pkey
-            primary key,
-    sales_id   INTEGER                        not null,
-    product_id uuid                           not null
-
-);
-
-alter table sales_product
-    owner to postgres;
-
-create table if not exists baners
-(
-    id       serial not null
-        constraint baners_pkey
-            primary key,
-    image_id uuid   not null,
-    title    text default null
-
-);
-
-alter table baners
-    owner to postgres;
-
-ALTER TABLE "user"
-    ADD CONSTRAINT "user_fk0" FOREIGN KEY ("person_id") REFERENCES "person" ("id");
-ALTER TABLE "user"
-    ADD CONSTRAINT "user_fk1" FOREIGN KEY ("imager_id") REFERENCES "images" ("id");
-
-ALTER TABLE "site_review"
-    ADD CONSTRAINT "site_review_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
-
-ALTER TABLE "product_review_product"
-    ADD CONSTRAINT "product_review_product_fk0" FOREIGN KEY ("product_id") REFERENCES "product" ("id");
-ALTER TABLE "product_review_product"
-    ADD CONSTRAINT "product_review_product_fk1" FOREIGN KEY ("product_review_id") REFERENCES "product_review" ("id");
-
-ALTER TABLE "sales_product"
-    ADD CONSTRAINT "sales_product_fk0" FOREIGN KEY ("sales_id") REFERENCES "sales" ("id");
-ALTER TABLE "sales_product"
-    ADD CONSTRAINT "sales_product_fk1" FOREIGN KEY ("product_id") REFERENCES "product" ("id");
-
-ALTER TABLE "product"
-    ADD CONSTRAINT "product_fk0" FOREIGN KEY ("product_type_id") REFERENCES "product_type" ("id");
-ALTER TABLE "product"
-    ADD CONSTRAINT "product_fk1" FOREIGN KEY ("image_id") REFERENCES "images" ("id");
-ALTER TABLE "product"
-    ADD CONSTRAINT "product_fk2" FOREIGN KEY ("delivery_id") REFERENCES "product_delivery" ("id");
-
+    "id"       int4                   NOT NULL DEFAULT nextval('sales_id_seq'::regclass),
+    "title"    text COLLATE "default" NOT NULL,
+    "image_id" uuid,
+    "discount" float8                 NOT NULL,
+    CONSTRAINT "sales_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
 ALTER TABLE "sales"
-    ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("images_id") REFERENCES "images" ("id");
+    OWNER TO "postgres";
 
-ALTER TABLE "order"
-    ADD CONSTRAINT "order_fk0" FOREIGN KEY ("order_delivery_id") REFERENCES "order_delivery" ("id");
-ALTER TABLE "order"
-    ADD CONSTRAINT "order_fk1" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+CREATE TABLE "sales_product"
+(
+    "id"         uuid NOT NULL DEFAULT gen_random_uuid(),
+    "sale_id"    int4 NOT NULL,
+    "product_id" uuid NOT NULL,
+    CONSTRAINT "sales_product_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "sales_product"
+    OWNER TO "postgres";
 
-ALTER TABLE "order_review"
-    ADD CONSTRAINT "order_review_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
-ALTER TABLE "order_review"
-    ADD CONSTRAINT "order_review_fk1" FOREIGN KEY ("order_id") REFERENCES "order" ("id");
+CREATE TABLE "site_reviews"
+(
+    "id"          uuid NOT NULL DEFAULT gen_random_uuid(),
+    "title"       text COLLATE "default",
+    "user_id"     uuid NOT NULL,
+    "mark"        int4 NOT NULL,
+    "description" text,
+    CONSTRAINT "site_review_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "site_reviews"
+    OWNER TO "postgres";
+
+CREATE TABLE "users"
+(
+    "id"            uuid                   NOT NULL DEFAULT gen_random_uuid(),
+    "person_id"     uuid                   NOT NULL,
+    "email"         text COLLATE "default" NOT NULL,
+    "image_id"      uuid,
+    "password_hash" text COLLATE "default" NOT NULL,
+    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+ALTER TABLE "users"
+    OWNER TO "postgres";
+
+CREATE TABLE "orders_products"
+(
+    "id"         uuid NOT NULL,
+    "product_id" uuid NOT NULL,
+    "order_id"   uuid NOT NULL,
+    "number"     int4 NOT NULL,
+    PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+CREATE TABLE "delivery"
+(
+    "id"   uuid NOT NULL,
+    "area" text NOT NULL,
+    PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+CREATE TABLE "categories"
+(
+    "id"        uuid NOT NULL,
+    "parent_id" uuid,
+    "title"     varchar(255),
+    PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+CREATE TABLE "baners"
+(
+    "id"       int4 NOT NULL,
+    "image_id" uuid NOT NULL,
+    "title"    text NOT NULL,
+    PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+CREATE TABLE "favorite_categories"
+(
+    "id"          uuid NOT NULL,
+    "category_id" int4 NOT NULL,
+    "title"       text NOT NULL,
+    PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
+CREATE TABLE "favorite_category_products"
+(
+    "id"                   uuid NOT NULL,
+    "product_id"           uuid NOT NULL,
+    "favorite_categoru_id" uuid NOT NULL,
+    PRIMARY KEY ("id")
+)
+    WITHOUT OIDS;
 
 ALTER TABLE "baners"
-    ADD CONSTRAINT "baners_fk0" FOREIGN KEY ("image_id") REFERENCES "images" ("id");
-
+    ADD CONSTRAINT "baners_fk0" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders"
+    ADD CONSTRAINT "order_fk0" FOREIGN KEY ("order_delivery_id") REFERENCES "orders_delivery" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders"
+    ADD CONSTRAINT "order_fk1" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "order_reviews"
+    ADD CONSTRAINT "order_review_fk0" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "order_reviews"
+    ADD CONSTRAINT "order_review_fk1" FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products"
+    ADD CONSTRAINT "product_fk0" FOREIGN KEY ("collection_id") REFERENCES "collections" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products"
+    ADD CONSTRAINT "product_fk1" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products"
+    ADD CONSTRAINT "product_fk2" FOREIGN KEY ("delivery_id") REFERENCES "products_delivery" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "product_review_products"
+    ADD CONSTRAINT "product_review_product_fk0" FOREIGN KEY ("product_id") REFERENCES "products" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "product_review_products"
+    ADD CONSTRAINT "product_review_product_fk1" FOREIGN KEY ("product_review_id") REFERENCES "product_reviews" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "sales"
+    ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "sales_product"
+    ADD CONSTRAINT "sales_product_fk0" FOREIGN KEY ("sale_id") REFERENCES "sales" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "sales_product"
+    ADD CONSTRAINT "sales_product_fk1" FOREIGN KEY ("product_id") REFERENCES "products" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "site_reviews"
+    ADD CONSTRAINT "site_review_fk0" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "users"
+    ADD CONSTRAINT "user_fk0" FOREIGN KEY ("person_id") REFERENCES "persons" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "users"
+    ADD CONSTRAINT "user_fk1" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders_products"
+    ADD CONSTRAINT "product_id" FOREIGN KEY ("product_id") REFERENCES "products" ("id");
+ALTER TABLE "orders_products"
+    ADD CONSTRAINT "order_id" FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
+ALTER TABLE "products_delivery"
+    ADD CONSTRAINT "delivery_id" FOREIGN KEY ("sale_delivery") REFERENCES "delivery" ("id");
+ALTER TABLE "products"
+    ADD CONSTRAINT "product_category" FOREIGN KEY ("product_category_id") REFERENCES "categories" ("id");
+ALTER TABLE "categories"
+    ADD CONSTRAINT "parent_id" FOREIGN KEY ("parent_id") REFERENCES "categories" ("id");
+ALTER TABLE "baners"
+    ADD CONSTRAINT "image_id" FOREIGN KEY ("image_id") REFERENCES "images" ("id");
+ALTER TABLE "favorite_categories"
+    ADD CONSTRAINT "categoriy_id" FOREIGN KEY ("category_id") REFERENCES "categories" ("id");
+ALTER TABLE "favorite_category_products"
+    ADD CONSTRAINT "favorite_category_id" FOREIGN KEY ("favorite_categoru_id") REFERENCES "favorite_categories" ("id");
+ALTER TABLE "favorite_category_products"
+    ADD CONSTRAINT "product_id" FOREIGN KEY ("product_id") REFERENCES "products" ("id");
