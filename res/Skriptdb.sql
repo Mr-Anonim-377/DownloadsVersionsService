@@ -8,7 +8,7 @@ CREATE EXTENSION "pgcrypto";
 -- Создание таблиц  TODO (В разработке)
 CREATE TABLE "baners"
 (
-    "id"       float8 NOT NULL DEFAULT nextval('baners_id_seq'::regclass),
+    "id"       serial NOT NULL,
     "image_id" uuid   NOT NULL,
     "title"    text COLLATE "default",
     CONSTRAINT "baners_pkey" PRIMARY KEY ("id")
@@ -101,6 +101,7 @@ CREATE TABLE "products_delivery"
     "id"                uuid NOT NULL DEFAULT gen_random_uuid(),
     "possible_delivery" bool,
     "sale_delivery"     float8,
+    "delivery_id"       uuid,
     CONSTRAINT "product_delivery_pkey" PRIMARY KEY ("id")
 )
     WITHOUT OIDS;
@@ -133,7 +134,7 @@ ALTER TABLE "product_review_products"
 
 CREATE TABLE "collections"
 (
-    "id"          int4 NOT NULL DEFAULT nextval('product_type_id_seq'::regclass),
+    "id"          serial NOT NULL,
     "title"       text COLLATE "default",
     "description" text COLLATE "default",
     CONSTRAINT "product_type_pkey" PRIMARY KEY ("id")
@@ -144,7 +145,7 @@ ALTER TABLE "collections"
 
 CREATE TABLE "sales"
 (
-    "id"       int4                   NOT NULL DEFAULT nextval('sales_id_seq'::regclass),
+    "id"       serial                 not null,
     "title"    text COLLATE "default" NOT NULL,
     "image_id" uuid,
     "discount" float8                 NOT NULL,
@@ -198,47 +199,47 @@ CREATE TABLE "orders_products"
     "order_id"   uuid NOT NULL,
     "number"     int4 NOT NULL,
     PRIMARY KEY ("id")
-)
-    WITHOUT OIDS;
+);
+
 CREATE TABLE "delivery"
 (
     "id"   uuid NOT NULL,
     "area" text NOT NULL,
     PRIMARY KEY ("id")
-)
-    WITHOUT OIDS;
+);
+
 CREATE TABLE "categories"
 (
     "id"        uuid NOT NULL,
     "parent_id" uuid,
     "title"     varchar(255),
     PRIMARY KEY ("id")
-)
-    WITHOUT OIDS;
+);
+
 CREATE TABLE "baners"
 (
     "id"       int4 NOT NULL,
     "image_id" uuid NOT NULL,
     "title"    text NOT NULL,
     PRIMARY KEY ("id")
-)
-    WITHOUT OIDS;
+);
+
 CREATE TABLE "favorite_categories"
 (
     "id"          uuid NOT NULL,
     "category_id" int4 NOT NULL,
     "title"       text NOT NULL,
     PRIMARY KEY ("id")
-)
-    WITHOUT OIDS;
+);
+
 CREATE TABLE "favorite_category_products"
 (
     "id"                   uuid NOT NULL,
     "product_id"           uuid NOT NULL,
     "favorite_categoru_id" uuid NOT NULL,
     PRIMARY KEY ("id")
-)
-    WITHOUT OIDS;
+);
+
 
 ALTER TABLE "baners"
     ADD CONSTRAINT "baners_fk0" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

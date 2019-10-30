@@ -1,44 +1,67 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.0.RC1'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'java'
-	id 'war'
+    id 'org.liquibase.gradle' version '2.0.1'
+    id 'org.springframework.boot' version '2.2.0.RC1'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id 'war'
 }
-
 group = 'com.Sales'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
     jaxb
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
 }
-
 repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
 }
-
+sourceCompatibility = JavaVersion.VERSION_12
+targetCompatibility = JavaVersion.VERSION_12
 dependencies {
-	compile('org.projectlombok:lombok')
-	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    /*
+    ----------liquibase----------
+    */
+    compile('org.hsqldb:hsqldb:2.2.8')
+    compile('org.hsqldb:sqltool:2.2.8')
+    compile('com.h2database:h2:1.3.167')
+    liquibaseRuntime 'org.liquibase:liquibase-core:3.6.1'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.0.1'
+    liquibaseRuntime 'postgresql:postgresql-connector-java:LATEST'
+//    compile('postgresql:postgresql:9.1-901.jdbc4')
+    /* 
+    ----------lombok----------
+    */
+
+    compile('org.projectlombok:lombok')
+    /*
+    ----------gson----------
+    */
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    /*
+    ----------jaxb----------
+    */
     implementation "javax.xml.bind:jaxb-api:2.2.11"
-    	implementation "com.sun.xml.bind:jaxb-core:2.2.11"
-    	implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
-    	implementation "javax.activation:activation:1.1.1"
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.postgresql:postgresql'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+    implementation "com.sun.xml.bind:jaxb-core:2.2.11"
+    implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
+    implementation "javax.activation:activation:1.1.1"
+    /*
+    ----------springframework----------
+    */
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
