@@ -8,18 +8,16 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
+@Entity()
+@Table(name = "products")
 @Data
 public class Product {
-
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private String title;
 
-    private Integer product_type_id;
+    private Integer product_category_id;
 
     private Double price;
 
@@ -30,9 +28,9 @@ public class Product {
     private UUID delivery_id;
 
 //    @Column(name = "properties")
-//    @Type(type = "com.Sales.SalesWeb.model.DataType.JsonType")
+//    @Type(type = "com.Sale.SalesWeb.model.DataType.JsonType")
 //    private JsonElement properties;
     private String properties;
 
-    private String type;
+    private String description;
 }

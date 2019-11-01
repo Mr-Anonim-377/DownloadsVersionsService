@@ -5,17 +5,15 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
+@Entity()
+@Table(name = "images")
 @Data
 public class Image {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "image")
-    private String image;
+    private String imagePatch;
 
 }
 

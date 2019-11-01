@@ -1,13 +1,15 @@
 plugins {
-    id 'org.liquibase.gradle' version '2.0.1'
     id 'org.springframework.boot' version '2.2.0.RC1'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id 'war'
+    id "org.flywaydb.flyway" version "6.0.8"
 }
 group = 'com.Sales'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_12
+targetCompatibility = JavaVersion.VERSION_12
 
 configurations {
     jaxb
@@ -20,35 +22,25 @@ repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/milestone' }
 }
-sourceCompatibility = JavaVersion.VERSION_12
-targetCompatibility = JavaVersion.VERSION_12
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/sales'
+    user = 'postgres'
+    password = 'admin'
+}
 dependencies {
     /*
-    ----------liquibase----------
+    ----------flayWay----------
     */
-    compile('org.hsqldb:hsqldb:2.2.8')
-    compile('org.hsqldb:sqltool:2.2.8')
-    compile('com.h2database:h2:1.3.167')
-    liquibaseRuntime 'org.liquibase:liquibase-core:3.6.1'
-    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.0.1'
-    liquibaseRuntime 'postgresql:postgresql-connector-java:LATEST'
-//    compile('postgresql:postgresql:9.1-901.jdbc4')
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '6.0.8'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.199'
     /* 
     ----------lombok----------
     */
-
     compile('org.projectlombok:lombok')
     /*
     ----------gson----------
     */
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    /*
-    ----------jaxb----------
-    */
-    implementation "javax.xml.bind:jaxb-api:2.2.11"
-    implementation "com.sun.xml.bind:jaxb-core:2.2.11"
-    implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
-    implementation "javax.activation:activation:1.1.1"
     /*
     ----------springframework----------
     */
