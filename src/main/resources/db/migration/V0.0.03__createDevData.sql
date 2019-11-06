@@ -1,4 +1,16 @@
-﻿INSERT INTO public.images (id, image_patch)
+INSERT into public.collections (id, title, description)
+VALUES (2, 'rterteergtre', 'rewrgbtrrqwerewfewwfevfrer');
+
+INSERT INTO delivery (id, area)
+VALUES ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c', 'erewrer');
+
+INSERT INTO products_delivery (id, possible_delivery, sale_delivery, delivery_id)
+VALUES ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c',true, '10.02', '43cf2e23-52a5-48cd-8b0d-739a9b863d6c');
+
+INSERT INTO categories (id, parent_id, title)
+VALUES (1,null, '10.02');
+
+INSERT INTO public.images (id, image_patch)
 VALUES ('c6371c0a-1541-42c2-b460-5b30f8d4c8fc',
         'uptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sin')
      , ('ea3ab0c5-8186-444c-947c-36cb8904cacd', 'commodo consequat. Duis aute irure dolor in reprehend')
@@ -31,3 +43,13 @@ VALUES ('1cbec8d6-391f-4b93-9b29-c8e844905402',
      , ('4b92fa26-8dac-4c73-9bd7-4f40df5edeaf', 'et, consectetur adipiscing elit, sed do eiusmod tempor incididunt u')
      , ('edb1f866-6c1b-4379-8abe-18135d236022', ' sed do eiusmod tempor ')
 ;
+
+INSERT INTO public.products (id, title, product_category_id, price, image_id, collection_id, delivery_id, properties)
+VALUES ('1aeddfd8-fe73-463a-8670-32884596e61b', 'd est laborum.Lorem ipsum dolor sit amet, consectetur adip', 1, 123,
+'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, '43cf2e23-52a5-48cd-8b0d-739a9b863d6c', '{"i":"23"}')
+, ('6f1a625b-0fc7-458b-9afb-1f5c573f57c2', 'dese', 1, 1345, 'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2,
+'43cf2e23-52a5-48cd-8b0d-739a9b863d6c', '{"i":"23"}')
+, ('55224f94-e12b-406a-901b-e12f8e3328d7', ' non proident, sunt in culpa qui offic', 1, 27.56,
+'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, '43cf2e23-52a5-48cd-8b0d-739a9b863d6c', '{"i":"23"}')
+, ('33ca8fd0-5fc7-484f-be43-9eac73a98be9', 'a qui officia deserunt mol', 1, 100,
+'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, '43cf2e23-52a5-48cd-8b0d-739a9b863d6c', '{"i":"23"}');
