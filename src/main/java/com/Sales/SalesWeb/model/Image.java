@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Image {
 
     @Id
-    private UUID id;
+    private UUID imageId;
 
     private String imagePatch;
 

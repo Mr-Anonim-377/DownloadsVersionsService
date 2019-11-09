@@ -1,233 +1,239 @@
+drop extension "pgcrypto";
+drop extension "uuid-ossp";
+create EXTENSION IF NOT EXISTS "uuid-ossp";
+create EXTENSION "pgcrypto";
+
+create type baner_location as ENUM ('main_central','main_small');
+create type baners_status as ENUM ('uses','not use');
+
 create TABLE "baners"
 (
-    "id"       serial NOT NULL,
-    "image_id" uuid   NOT NULL,
-    "title"    text COLLATE "default",
-    CONSTRAINT "baners_pkey" PRIMARY KEY ("id")
+    "baner_id"      serial         NOT NULL,
+    "image_id"      uuid           NOT NULL,
+    "title"         text,
+    "page_location" baner_location not null,
+    "baner_status"  baners_status,
+    CONSTRAINT "baners_pkey" PRIMARY KEY ("baner_id")
 );
+
 
 create TABLE "images"
 (
-    "id"          uuid                   NOT NULL DEFAULT gen_random_uuid(),
-    "image_patch" text COLLATE "default" NOT NULL,
-    CONSTRAINT "images_pkey" PRIMARY KEY ("id")
+    "image_id"   uuid DEFAULT gen_random_uuid() NOT NULL,
+    "image_patch" text                           NOT NULL,
+    CONSTRAINT "images_pkey" PRIMARY KEY ("image_id")
 );
+
+create type payment_type as ENUM ('cash','non-cash');
+create type order_status as ENUM ('creating','moderation','delivering','successfully','canceled by user',
+    'canceled by sales');
 
 create TABLE "orders"
 (
-    "id"                uuid                   NOT NULL DEFAULT gen_random_uuid(),
-    "is_payment"        bool,
-    "payment_type"      text COLLATE "default" NOT NULL,
+    "order_id"          uuid         NOT NULL DEFAULT gen_random_uuid(),
+    "is_payment"        bool         NOT NULL,
+    "payment_type"      payment_type,
     "order_delivery_id" uuid,
-    "statys"            text COLLATE "default",
-    "user_id"           uuid                   NOT NULL,
-    CONSTRAINT "order_pkey" PRIMARY KEY ("id")
+    "order_status"      order_status NOT NULL,
+    "user_id"           uuid         NOT NULL,
+    CONSTRAINT "order_pkey" PRIMARY KEY ("order_id")
 );
+
+create type order_delivery_status as ENUM ('successfully','canceled by user','canceled by sales','not delivered');
 
 create TABLE "orders_delivery"
 (
-    "id"      uuid NOT NULL DEFAULT gen_random_uuid(),
-    "status"  text COLLATE "default",
-    "address" text COLLATE "default",
-    "date"    timestamp(6),
-    CONSTRAINT "order_delivery_pkey" PRIMARY KEY ("id")
+    "order_delivery_id"     uuid NOT NULL DEFAULT gen_random_uuid(),
+    "order_delivery_status" order_delivery_status,
+    "address"               text,
+    "delivery_date"         timestamp(6),
+    "delivery_id"           uuid,
+    CONSTRAINT "order_delivery_pkey" PRIMARY KEY ("order_delivery_id")
 );
 
-create TABLE "order_reviews"
+create type reviews_type as ENUM ('order','site','product');
+
+create TABLE "reviews"
 (
-    "id"          uuid NOT NULL DEFAULT gen_random_uuid(),
-    "title"       text COLLATE "default",
-    "user_id"     uuid NOT NULL,
-    "mark"        int4 NOT NULL,
-    "order_id"    uuid NOT NULL,
-    "description" text,
-    CONSTRAINT "order_review_pkey" PRIMARY KEY ("id")
+    "review_id"          uuid         NOT NULL DEFAULT gen_random_uuid(),
+    "review_title"       text,
+    "user_id"            uuid         NOT NULL,
+    "review_mark"        int4         NOT NULL,
+    "review_description" text,
+    "review_type"        reviews_type NOT NULL,
+    CONSTRAINT "Review_pkey" PRIMARY KEY ("review_id")
 );
 
-create TABLE "persons"
+create TABLE "order_review"
 (
-    "id"     uuid                   NOT NULL DEFAULT gen_random_uuid(),
-    "phone"  text COLLATE "default",
-    "f_name" text COLLATE "default" NOT NULL,
-    "l_name" text COLLATE "default" NOT NULL,
-    CONSTRAINT "person_pkey" PRIMARY KEY ("id")
-);
-
-create TABLE "products"
-(
-    "id"                  uuid                  NOT NULL DEFAULT gen_random_uuid(),
-    "title"               text COLLATE "default" NOT NULL,
-    "product_category_id" int4                   NOT NULL,
-    "price"               float8                 NOT NULL,
-    "image_id"            uuid                   NOT NULL,
-    "collection_id"       int4,
-    "delivery_id"         uuid,
-    "properties"          text COLLATE "default" NOT NULL,
-    "description"         text COLLATE "default",
-    CONSTRAINT "product_pkey" PRIMARY KEY ("id")
-);
-
-create TABLE "products_delivery"
-(
-    "id"                uuid NOT NULL DEFAULT gen_random_uuid(),
-    "possible_delivery" bool,
-    "sale_delivery"     float8,
-    "delivery_id"       uuid,
-    CONSTRAINT "product_delivery_pkey" PRIMARY KEY ("id")
+    "order_review_id" uuid NOT NULL default gen_random_uuid(),
+    "order_id"        uuid NOT NULL,
+    "review_id"       uuid NOT NULL,
+    CONSTRAINT "order_review_pkey" PRIMARY KEY ("order_review_id")
 );
 
 create TABLE "product_reviews"
 (
-    "id"          uuid NOT NULL DEFAULT gen_random_uuid(),
-    "title"       text COLLATE "default",
-    "user_id"     uuid NOT NULL,
-    "mark"        int4 NOT NULL,
-    "description" text,
-    CONSTRAINT "product_review_pkey" PRIMARY KEY ("id")
+    "product_reviews_id" uuid NOT NULL default gen_random_uuid(),
+    "review_id"          uuid NOT NULL,
+    "product_id"         uuid NOT NULL,
+    CONSTRAINT "product_review_pkey" PRIMARY KEY ("product_reviews_id")
 );
 
-create TABLE "product_review_products"
+create TABLE "persons"
 (
-    "id"                uuid NOT NULL DEFAULT gen_random_uuid(),
-    "product_id"        uuid NOT NULL,
-    "product_review_id" uuid NOT NULL,
-    CONSTRAINT "product_review_product_pkey" PRIMARY KEY ("id")
+    "person_id"    uuid NOT NULL default gen_random_uuid(),
+    "person_phone" text,
+    "first_name"   text NOT NULL,
+    "last_name"    text NOT NULL,
+    CONSTRAINT "person_pkey" PRIMARY KEY ("person_id")
+);
+
+create TABLE "products"
+(
+    "product_id"          uuid           NOT NULL default gen_random_uuid(),
+    "name_product"        text           NOT NULL,
+    "product_category_id" int4           NOT NULL,
+--    numeric(14, 2)
+    "price"               float8 NOT NULL,
+    "image_id"            uuid           NOT NULL,
+    "collection_id"       int4,
+    "properties"          text           NOT NULL,
+    "product_description" text,
+    CONSTRAINT "product_pkey" PRIMARY KEY ("product_id")
+);
+
+create TABLE "products_delivery"
+(
+    "product_delivery_id" uuid NOT NULL default gen_random_uuid(),
+    "sale_delivery"       numeric(14, 2),
+    "product_id"          uuid ,
+    "delivery_id"         uuid NOT NULL,
+    CONSTRAINT "product_delivery_pkey" PRIMARY KEY ("product_delivery_id")
 );
 
 create TABLE "collections"
 (
-    "id"          serial NOT NULL,
-    "title"       text COLLATE "default",
-    "description" text COLLATE "default",
-    CONSTRAINT "product_type_pkey" PRIMARY KEY ("id")
+    "collection_id"          serial NOT NULL,
+    "collection_name"        text   NOT NULL,
+    "collection_description" text,
+    CONSTRAINT "product_type_pkey" PRIMARY KEY ("collection_id")
 );
 
 create TABLE "sales"
 (
-    "id"       serial                 not null,
-    "title"    text COLLATE "default" NOT NULL,
-    "image_id" uuid,
-    "discount" float8                 NOT NULL,
-    CONSTRAINT "sales_pkey" PRIMARY KEY ("id")
+    "sale_id"   serial         NOT NULL,
+    "sale_name" text           NOT NULL,
+    "image_id"  uuid,
+--    numeric(14, 2)
+    "discount"  float8 NOT NULL,
+    CONSTRAINT "sales_pkey" PRIMARY KEY ("sale_id")
 );
 
 create TABLE "sales_product"
 (
-    "id"         uuid NOT NULL DEFAULT gen_random_uuid(),
-    "sale_id"    int4 NOT NULL,
-    "product_id" uuid NOT NULL,
-    CONSTRAINT "sales_product_pkey" PRIMARY KEY ("id")
-);
-
-create TABLE "site_reviews"
-(
-    "id"          uuid NOT NULL DEFAULT gen_random_uuid(),
-    "title"       text COLLATE "default",
-    "user_id"     uuid NOT NULL,
-    "mark"        int4 NOT NULL,
-    "description" text,
-    CONSTRAINT "site_review_pkey" PRIMARY KEY ("id")
+    "sale_product_id" uuid NOT NULL default gen_random_uuid(),
+    "sale_id"         int4 NOT NULL,
+    "product_id"      uuid NOT NULL,
+    CONSTRAINT "sales_product_pkey" PRIMARY KEY ("sale_product_id")
 );
 
 create TABLE "users"
 (
-    "id"            uuid                   NOT NULL DEFAULT gen_random_uuid(),
-    "person_id"     uuid                   NOT NULL,
-    "email"         text COLLATE "default" NOT NULL,
+    "users_id"      uuid NOT NULL default gen_random_uuid(),
+    "person_id"     uuid NOT NULL,
+    "email"         text NOT NULL,
     "image_id"      uuid,
-    "password_hash" text COLLATE "default" NOT NULL,
-    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+    "password_hash" text NOT NULL,
+    CONSTRAINT "user_pkey" PRIMARY KEY ("users_id")
 );
 
 create TABLE "orders_products"
 (
-    "id"         uuid NOT NULL,
-    "product_id" uuid NOT NULL,
-    "order_id"   uuid NOT NULL,
-    "number"     int4 NOT NULL,
-    PRIMARY KEY ("id")
+    "order_product_id" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "product_id"       uuid                           NOT NULL,
+    "order_id"         uuid                           NOT NULL,
+    "count"            int4                           NOT NULL,
+    CONSTRAINT "order_product_pkey" PRIMARY KEY ("order_product_id")
 );
 
 create TABLE "delivery"
 (
-    "id"   uuid NOT NULL,
-    "area" text NOT NULL,
-    PRIMARY KEY ("id")
+    "delivery_id"    uuid DEFAULT gen_random_uuid() NOT NULL,
+    "delivery_area"  text                           NOT NULL,
+    "price_delivery" numeric(14, 2)                 NOT NULL,
+    CONSTRAINT "delivery_pkey" PRIMARY KEY ("delivery_id")
 );
 
 create TABLE "categories"
 (
-    "id"        int4 NOT NULL,
-    "parent_id" int4,
-    "title"     varchar(255),
-    PRIMARY KEY ("id")
+    "categories_id"        int4 NOT NULL,
+    "parent_categories_id" int4,
+    "categories_name"      text NOT NULL,
+    CONSTRAINT "categories_pkey" PRIMARY KEY ("categories_id")
 );
-
 
 create TABLE "favorite_category"
 (
-    "id"          uuid NOT NULL,
-    "category_id" int4 NOT NULL,
-    "title"       text NOT NULL,
-    PRIMARY KEY ("id")
+    "favorite_category_id" uuid NOT NULL,
+    "category_id"          int4 NOT NULL,
+    CONSTRAINT "favorite_category_pkey" PRIMARY KEY ("favorite_category_id")
 );
 
 create TABLE "favorite_category_products"
 (
-    "id"                   uuid NOT NULL,
-    "product_id"           uuid NOT NULL,
-    "favorite_category_id" uuid NOT NULL,
-    PRIMARY KEY ("id")
+    "favorite_category_product_id" uuid NOT NULL,
+    "product_id"                    uuid NOT NULL,
+    "favorite_category_id"          uuid NOT NULL,
+    CONSTRAINT "favorite_category_product_pkey" PRIMARY KEY ("favorite_category_product_id")
 );
 
-ALTER TABLE "products"
-    ADD CONSTRAINT "product_fk0" FOREIGN KEY ("collection_id") REFERENCES "collections" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "products"
-    ADD CONSTRAINT "product_fk1" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "products"
-    ADD CONSTRAINT "product_fk2" FOREIGN KEY ("delivery_id") REFERENCES "products_delivery" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
---
+
 ALTER TABLE "baners"
-    ADD CONSTRAINT "baners_fk0" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "orders"
-    ADD CONSTRAINT "order_fk0" FOREIGN KEY ("order_delivery_id") REFERENCES "orders_delivery" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "orders"
-    ADD CONSTRAINT "order_fk1" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "order_reviews"
-    ADD CONSTRAINT "order_review_fk0" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "order_reviews"
-    ADD CONSTRAINT "order_review_fk1" FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "product_review_products"
-    ADD CONSTRAINT "product_review_product_fk0" FOREIGN KEY ("product_id") REFERENCES "products" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "product_review_products"
-    ADD CONSTRAINT "product_review_product_fk1" FOREIGN KEY ("product_review_id") REFERENCES "product_reviews" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "sales"
-    ADD CONSTRAINT "sales_fk0" FOREIGN KEY ("image_id") REFERENCES "images" ("id")ON DELETE NO ACTION ON UPDATE NO ACTION ;
-ALTER TABLE "sales_product"
-    ADD CONSTRAINT "sales_product_fk0" FOREIGN KEY ("sale_id") REFERENCES "sales" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION ;
-ALTER TABLE "sales_product"
-    ADD CONSTRAINT "sales_product_fk1" FOREIGN KEY ("product_id") REFERENCES "products" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "site_reviews"
-    ADD CONSTRAINT "site_review_fk0" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION ;
-ALTER TABLE "users"
-    ADD CONSTRAINT "user_fk0" FOREIGN KEY ("person_id") REFERENCES "persons" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "users"
-    ADD CONSTRAINT "user_fk1" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION ;
-ALTER TABLE "orders_products"
-    ADD CONSTRAINT "product_id" FOREIGN KEY ("product_id") REFERENCES "products" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "orders_products"
-    ADD CONSTRAINT "order_id" FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "products_delivery"
-    ADD CONSTRAINT "delivery_id" FOREIGN KEY ("delivery_id") REFERENCES "delivery" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION ;
-ALTER TABLE "products"
-    ADD CONSTRAINT "product_category" FOREIGN KEY ("product_category_id") REFERENCES "categories" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_baners_images" FOREIGN KEY ("image_id") REFERENCES "images" ("image_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "categories"
-    ADD CONSTRAINT "parent_id" FOREIGN KEY ("parent_id") REFERENCES "categories" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "baners"
-    ADD CONSTRAINT "image_id" FOREIGN KEY ("image_id") REFERENCES "images" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_categories_parentCategories" FOREIGN KEY ("parent_categories_id") REFERENCES "categories" ("categories_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "favorite_category"
-    ADD CONSTRAINT "category_id" FOREIGN KEY ("category_id") REFERENCES "categories" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_favoriteCategory_categories" FOREIGN KEY ("category_id") REFERENCES "categories" ("categories_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "favorite_category_products"
-    ADD CONSTRAINT "favorite_category_id" FOREIGN KEY ("favorite_category_id") REFERENCES "favorite_category" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_favoriteCategoryProducts_favoriteCategory" FOREIGN KEY ("favorite_category_id") REFERENCES "favorite_category" ("favorite_category_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "favorite_category_products"
-    ADD CONSTRAINT "product_id" FOREIGN KEY ("product_id") REFERENCES "products" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_favoriteCategoryProducts_products" FOREIGN KEY ("product_id") REFERENCES "products" ("product_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "order_review"
+    ADD CONSTRAINT "fk_orderReview_orders" FOREIGN KEY ("order_id") REFERENCES "orders" ("order_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "order_review"
+    ADD CONSTRAINT "fk_orderReview_reviews" FOREIGN KEY ("review_id") REFERENCES "reviews" ("review_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders"
+    ADD CONSTRAINT "fk_orders_ordersDelivery" FOREIGN KEY ("order_delivery_id") REFERENCES "orders_delivery" ("order_delivery_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders"
+    ADD CONSTRAINT "fk_orders_users" FOREIGN KEY ("user_id") REFERENCES "users" ("users_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders_delivery"
+    ADD CONSTRAINT "fk_ordersDelivery_delivery" FOREIGN KEY ("delivery_id") REFERENCES "delivery" ("delivery_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders_products"
+    ADD CONSTRAINT "fk_ordersProducts_products" FOREIGN KEY ("product_id") REFERENCES "products" ("product_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orders_products"
+    ADD CONSTRAINT "fk_orders_productsOrders" FOREIGN KEY ("order_id") REFERENCES "orders" ("order_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "product_reviews"
+    ADD CONSTRAINT "fk_productReviews_products" FOREIGN KEY ("product_id") REFERENCES "products" ("product_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "product_reviews"
+    ADD CONSTRAINT "fk_productReviews_reviews" FOREIGN KEY ("review_id") REFERENCES "reviews" ("review_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products"
+    ADD CONSTRAINT "fk_products_categories" FOREIGN KEY ("product_category_id") REFERENCES "categories" ("categories_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products"
+    ADD CONSTRAINT "fk_products_collections" FOREIGN KEY ("collection_id") REFERENCES "collections" ("collection_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products"
+    ADD CONSTRAINT "fk_products_images" FOREIGN KEY ("image_id") REFERENCES "images" ("image_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products_delivery"
+    ADD CONSTRAINT "fk_productsDelivery_delivery" FOREIGN KEY ("delivery_id") REFERENCES "delivery" ("delivery_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "products_delivery"
+    ADD CONSTRAINT "fk_productsDelivery_products" FOREIGN KEY ("product_id") REFERENCES "products" ("product_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "reviews"
+    ADD CONSTRAINT "fk_reviews_users" FOREIGN KEY ("user_id") REFERENCES "users" ("users_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "sales"
+    ADD CONSTRAINT "fk_sales_images" FOREIGN KEY ("image_id") REFERENCES "images" ("image_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "sales_product"
+    ADD CONSTRAINT "fk_salesProduct_products" FOREIGN KEY ("product_id") REFERENCES "products" ("product_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "sales_product"
+    ADD CONSTRAINT "fk_salesProduct_sales" FOREIGN KEY ("sale_id") REFERENCES "sales" ("sale_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "users"
+    ADD CONSTRAINT "fk_users_persons" FOREIGN KEY ("person_id") REFERENCES "persons" ("person_id") ON DELETE NO ACTION ON UPDATE NO ACTION;

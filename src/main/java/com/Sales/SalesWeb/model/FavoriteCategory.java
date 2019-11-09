@@ -13,11 +13,9 @@ import java.util.UUID;
 public class FavoriteCategory {
 
     @Id
-    private UUID id;
+    private UUID favoriteCategoryId;
 
     private Integer categoryId;
-
-    private String title;
 
     private Integer popularValue;
 

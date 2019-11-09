@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 public class FavoriteCategoryProduct {
     @Id
-    private UUID id;
+    private UUID favoriteCategoryProductId;
 
     private UUID productId;
 

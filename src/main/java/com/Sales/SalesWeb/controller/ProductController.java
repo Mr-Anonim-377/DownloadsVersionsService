@@ -24,7 +24,7 @@ public class ProductController {
 
     @PostMapping("favorite")
     public ResponseEntity getFavoriteCategoriesFavoriteProdcuts() {
-        return productsService.getFavoriteCategoriesFavoriteProdcuts();
+        return new ResponseEntity("",HttpStatus.OK);
     }
 
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -11,9 +11,9 @@ import java.util.UUID;
 public class Sale {
 
     @Id
-    private Integer id;
+    private Integer saleId;
 
-    private String title;
+    private String saleName;
 
     private UUID imageId;
 
