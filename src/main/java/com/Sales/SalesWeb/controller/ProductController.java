@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping(value = "products", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductController {
@@ -18,22 +20,29 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity getProduct(@PathVariable("id") Product product) {
-        return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-
-    @PostMapping("favorite")
-    public ResponseEntity getFavoriteCategoriesFavoriteProdcuts() {
-        return new ResponseEntity("",HttpStatus.OK);
+    public ResponseEntity getProduct(@PathVariable UUID id) {
+        return new ResponseEntity<>(productsService.getProduct(id), HttpStatus.OK);
     }
 
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createProduct(@RequestBody Product product) {
-        return productsService.createProduct(product);
+        return new ResponseEntity<>(productsService.createProduct(product), HttpStatus.OK);
     }
-    @PostMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @DeleteMapping(value = "{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteProduct(@PathVariable("id") Product product) {
-        return productsService.deleteProduct(product);
+        productsService.deleteProduct(product);
+        return new ResponseEntity<>("\"delete\":\"successfully\"", HttpStatus.OK);
+    }
+
+    @PutMapping(value = "{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateProduct(@PathVariable("id") Product productFromDb, @RequestBody Product productFromReqest) {
+        return new ResponseEntity<>(productsService.updateProduct(productFromDb, productFromReqest), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "favorites",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getFavoriteCategoriesFavoriteProdcuts() {
+        return new ResponseEntity<>(productsService.getFavoriteCategoriesFavoriteProdcuts(), HttpStatus.OK);
     }
 
 }
