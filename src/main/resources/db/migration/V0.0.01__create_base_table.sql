@@ -95,7 +95,7 @@ create TABLE "products"
     "name_product"        text           NOT NULL,
     "product_category_id" int4           NOT NULL,
 --    numeric(14, 2)
-    "price"               float8 NOT NULL,
+    "price"               numeric(14, 2) NOT NULL,
     "image_id"            uuid           NOT NULL,
     "collection_id"       int4,
     "properties"          text           NOT NULL,
@@ -126,7 +126,7 @@ create TABLE "sales"
     "sale_name" text           NOT NULL,
     "image_id"  uuid,
 --    numeric(14, 2)
-    "discount"  float8 NOT NULL,
+    "discount"  numeric(14, 2) NOT NULL,
     CONSTRAINT "sales_pkey" PRIMARY KEY ("sale_id")
 );
 
@@ -167,10 +167,10 @@ create TABLE "delivery"
 
 create TABLE "categories"
 (
-    "categories_id"        int4 NOT NULL,
-    "parent_categories_id" int4,
-    "categories_name"      text NOT NULL,
-    CONSTRAINT "categories_pkey" PRIMARY KEY ("categories_id")
+    "category_id"        int4 NOT NULL,
+    "parent_category_id" int4,
+    "category_name"      text NOT NULL,
+    CONSTRAINT "category_pkey" PRIMARY KEY ("category_id")
 );
 
 create TABLE "favorite_category"
@@ -192,9 +192,9 @@ create TABLE "favorite_category_products"
 ALTER TABLE "baners"
     ADD CONSTRAINT "fk_baners_images" FOREIGN KEY ("image_id") REFERENCES "images" ("image_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "categories"
-    ADD CONSTRAINT "fk_categories_parentCategories" FOREIGN KEY ("parent_categories_id") REFERENCES "categories" ("categories_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_categories_parentCategories" FOREIGN KEY ("parent_category_id") REFERENCES "categories" ("category_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "favorite_category"
-    ADD CONSTRAINT "fk_favoriteCategory_categories" FOREIGN KEY ("category_id") REFERENCES "categories" ("categories_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_favoriteCategory_categories" FOREIGN KEY ("category_id") REFERENCES "categories" ("category_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "favorite_category_products"
     ADD CONSTRAINT "fk_favoriteCategoryProducts_favoriteCategory" FOREIGN KEY ("favorite_category_id") REFERENCES "favorite_category" ("favorite_category_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "favorite_category_products"
@@ -218,7 +218,7 @@ ALTER TABLE "product_reviews"
 ALTER TABLE "product_reviews"
     ADD CONSTRAINT "fk_productReviews_reviews" FOREIGN KEY ("review_id") REFERENCES "reviews" ("review_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "products"
-    ADD CONSTRAINT "fk_products_categories" FOREIGN KEY ("product_category_id") REFERENCES "categories" ("categories_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT "fk_products_categories" FOREIGN KEY ("product_category_id") REFERENCES "categories" ("category_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "products"
     ADD CONSTRAINT "fk_products_collections" FOREIGN KEY ("collection_id") REFERENCES "collections" ("collection_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "products"

@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.type.descriptor.sql.NumericTypeDescriptor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.SQLData;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class Product {
 
     private Integer productCategoryId;
 
-    private Double price;
+    private BigDecimal price;
 
     private UUID imageId;
 

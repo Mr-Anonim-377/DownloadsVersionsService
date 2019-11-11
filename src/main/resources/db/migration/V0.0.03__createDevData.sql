@@ -8,7 +8,7 @@ VALUES ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c', 'erewrer',12.1);
 INSERT INTO products_delivery (product_delivery_id, sale_delivery, delivery_id)
 VALUES ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c', '10.02', '43cf2e23-52a5-48cd-8b0d-739a9b863d6c');
 
-INSERT INTO categories (categories_id, parent_categories_id, categories_name)
+INSERT INTO categories (category_id, parent_category_id, category_name)
 VALUES (1,null, '10.02');
 
 INSERT INTO public.images (image_id, image_patch)

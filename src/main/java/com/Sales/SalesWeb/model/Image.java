@@ -11,6 +11,7 @@ import java.util.UUID;
 public class Image {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID imageId;
 
     private String imagePatch;

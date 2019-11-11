@@ -3,6 +3,7 @@ package com.Sales.SalesWeb.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -17,5 +18,5 @@ public class Sale {
 
     private UUID imageId;
 
-    private Double discount;
+    private BigDecimal discount;
 }
