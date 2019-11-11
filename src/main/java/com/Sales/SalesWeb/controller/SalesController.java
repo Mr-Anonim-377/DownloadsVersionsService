@@ -1,7 +1,7 @@
 package com.Sales.SalesWeb.controller;
 
 
-import com.Sales.SalesWeb.model.Sales;
+import com.Sales.SalesWeb.model.Sale;
 import com.Sales.SalesWeb.repository.SalesRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,32 +22,32 @@ public class SalesController {
     }
 
     @GetMapping
-    public List<Sales> getSales() {
+    public List<Sale> getSales() {
         return salesRepository.findAll();
     }
 
 
     @GetMapping("{id}")
-    public Sales getSale(@PathVariable("id") Sales sale) {
+    public Sale getSale(@PathVariable("id") Sale sale) {
         return sale;
     }
 
 
     @PostMapping
-    public Sales createSale(@RequestBody Sales sale) {
+    public Sale createSale(@RequestBody Sale sale) {
         return salesRepository.save(sale);
     }
 
 
     @PutMapping("{id}")
-    public Sales updateSale(@PathVariable("id") Sales saleFromDb,
-                            @RequestBody Sales saleFromUser) {
+    public Sale updateSale(@PathVariable("id") Sale saleFromDb,
+                           @RequestBody Sale saleFromUser) {
         BeanUtils.copyProperties(saleFromUser, saleFromDb, "id");
         return salesRepository.save(saleFromDb);
     }
 
     @DeleteMapping("{id}")
-    public void deleteSale(@PathVariable("id") Sales sale) {
+    public void deleteSale(@PathVariable("id") Sale sale) {
         salesRepository.delete(sale);
     }
 

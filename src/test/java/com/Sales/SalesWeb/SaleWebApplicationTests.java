@@ -2,7 +2,7 @@ package com.Sales.SalesWeb;
 
 import org.junit.jupiter.api.Test;
 
-class SalesWebApplicationTests {
+class SaleWebApplicationTests {
 
 	@Test
 	void contextLoads() {

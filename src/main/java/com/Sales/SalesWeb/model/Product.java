@@ -1,33 +1,43 @@
 package com.Sales.SalesWeb.model;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import lombok.Data;
+import org.flywaydb.core.internal.database.postgresql.PostgreSQLType;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.descriptor.sql.NumericTypeDescriptor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.sql.SQLData;
 import java.util.UUID;
 
-@Entity
+import static org.hibernate.type.descriptor.sql.NumericTypeDescriptor.INSTANCE;
+
+@Entity()
+@Table(name = "products")
 @Data
 public class Product {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private UUID productId;
 
-    private String title;
 
-    private Integer product_type_id;
+    private String nameProduct;
 
-    private double price;
+    private Integer productCategoryId;
 
-    private UUID image_id;
+    private BigDecimal price;
 
-    private Integer collection_id;
+    private UUID imageId;
 
-    private UUID delivery_id;
+    private Integer collectionId;
 
-    private UUID properties_id;
+//    @Column(name = "properties")
+//    @Type(type = "com.Sale.SalesWeb.model.DataType.JsonType")
+//    private JsonElement properties;
+    private String properties;
 
-    private String type;
-
+    private String productDescription;
 }

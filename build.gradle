@@ -1,45 +1,59 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.0.RC1'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'java'
-	id 'war'
+    id 'org.springframework.boot' version '2.2.0.RC1'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id 'war'
+    id "org.flywaydb.flyway" version "6.0.8"
 }
-
 group = 'com.Sales'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_12
+targetCompatibility = JavaVersion.VERSION_12
 
 configurations {
     jaxb
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
 }
-
 repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
 }
-
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/sales'
+    user = 'postgres'
+    password = 'admin'
+}
 dependencies {
-	compile('org.projectlombok:lombok')
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.3'
-    implementation "javax.xml.bind:jaxb-api:2.2.11"
-    	implementation "com.sun.xml.bind:jaxb-core:2.2.11"
-    	implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
-    	implementation "javax.activation:activation:1.1.1"
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.postgresql:postgresql'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+    /*
+    ----------flayWay----------
+    */
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '6.0.8'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.199'
+    /* 
+    ----------lombok----------
+    */
+    compile('org.projectlombok:lombok')
+    /*
+    ----------gson----------
+    */
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    /*
+    ----------springframework----------
+    */
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
