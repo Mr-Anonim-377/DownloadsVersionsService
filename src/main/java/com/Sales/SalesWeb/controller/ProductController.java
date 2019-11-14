@@ -1,6 +1,7 @@
 package com.Sales.SalesWeb.controller;
 
 
+import com.Sales.SalesWeb.controller.Handlers.AwesomeExceptionHandler;
 import com.Sales.SalesWeb.model.Product;
 import com.Sales.SalesWeb.service.ProductsService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,18 @@ public class ProductController {
 
     @GetMapping("{id}")
     public ResponseEntity getProduct(@PathVariable UUID id) {
-        return new ResponseEntity<>(productsService.getProduct(id), HttpStatus.OK);
+        Product product;
+        try {
+             product = productsService.getProduct(id);
+        }catch(RuntimeException e){
+            throw new AwesomeExceptionHandler.IntermalServerError();
+            e.printStackTrace();
+        }
+        if (product == null) {
+            throw new AwesomeExceptionHandler.NoSuchObject();
+        }
+
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,13 +41,13 @@ public class ProductController {
         return new ResponseEntity<>(productsService.createProduct(product), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteProduct(@PathVariable("id") Product product) {
         productsService.deleteProduct(product);
-        return new ResponseEntity<>("\"delete\":\"successfully\"", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(value = "{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateProduct(@PathVariable("id") Product productFromDb, @RequestBody Product productFromReqest) {
         return new ResponseEntity<>(productsService.updateProduct(productFromDb, productFromReqest), HttpStatus.OK);
     }

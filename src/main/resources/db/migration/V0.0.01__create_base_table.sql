@@ -97,6 +97,7 @@ create TABLE "products"
 --    numeric(14, 2)
     "price"               numeric(14, 2) NOT NULL,
     "image_id"            uuid           NOT NULL,
+--TODO нужно создать отдельную таблицу коллекции-продукты и выпелить collection_id
     "collection_id"       int4,
     "properties"          text           NOT NULL,
     "product_description" text,
@@ -117,6 +118,7 @@ create TABLE "collections"
     "collection_id"          serial NOT NULL,
     "collection_name"        text   NOT NULL,
     "collection_description" text,
+    "image_id"               uuid,
     CONSTRAINT "product_type_pkey" PRIMARY KEY ("collection_id")
 );
 
@@ -189,6 +191,8 @@ create TABLE "favorite_category_products"
 );
 
 
+ALTER TABLE "collections"
+    ADD CONSTRAINT "fk_baners_images" FOREIGN KEY ("image_id") REFERENCES "images" ("image_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "baners"
     ADD CONSTRAINT "fk_baners_images" FOREIGN KEY ("image_id") REFERENCES "images" ("image_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "categories"
