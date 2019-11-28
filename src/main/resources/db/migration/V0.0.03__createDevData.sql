@@ -1,17 +1,19 @@
 
-INSERT into collections (collection_id, collection_name, collection_description)
-VALUES (2, 'rterteergtre', 'rewrgbtrrqwerewfewwfevfrer');
+insert into collections (collection_id, collection_name, collection_description)
+values (2, 'rterteergtre', 'rewrgbtrrqwerewfewwfevfrer'),
+(3, '4545', '454545');
 
-INSERT INTO delivery (delivery_id, delivery_area, price_delivery)
-VALUES ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c', 'erewrer',12.1);
+insert into delivery (delivery_id, delivery_area, price_delivery)
+values ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c', 'erewrer',12.1);
 
-INSERT INTO products_delivery (product_delivery_id, sale_delivery, delivery_id)
-VALUES ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c', '10.02', '43cf2e23-52a5-48cd-8b0d-739a9b863d6c');
+insert into products_delivery (product_delivery_id, sale_delivery, delivery_id)
+values ('43cf2e23-52a5-48cd-8b0d-739a9b863d6c', '10.02', '43cf2e23-52a5-48cd-8b0d-739a9b863d6c');
 
-INSERT INTO categories (category_id, parent_category_id, category_name)
-VALUES (1,null, '10.02');
+insert into categories (category_id, parent_category_id, category_name)
+values (1,null, '10.02'),
+(2,null, '10.0rtretert');
 
-INSERT INTO public.images (image_id, image_patch)
+insert into public.images (image_id, image_patch)
 VALUES ('c6371c0a-1541-42c2-b460-5b30f8d4c8fc',
         'uptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sin')
      , ('ea3ab0c5-8186-444c-947c-36cb8904cacd', 'commodo consequat. Duis aute irure dolor in reprehend')
@@ -26,7 +28,7 @@ VALUES ('c6371c0a-1541-42c2-b460-5b30f8d4c8fc',
         'met, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ')
      , ('5e41c8cd-9c4d-4af2-8298-e0a29c2519cf', 'ing elit, sed do eiusmod tempor incididunt ut labore et do')
      , ('5752013d-1012-40e4-be93-1baf4867b3fd', 'irure dolor');
-INSERT INTO public.images (image_id, image_patch)
+insert into public.images (image_id, image_patch)
 VALUES ('1cbec8d6-391f-4b93-9b29-c8e844905402',
         'iatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui ')
      , ('b2486bd0-8909-4b95-920a-81cbd87e3f72',
@@ -43,7 +45,7 @@ VALUES ('1cbec8d6-391f-4b93-9b29-c8e844905402',
      , ('4b92fa26-8dac-4c73-9bd7-4f40df5edeaf', 'et, consectetur adipiscing elit, sed do eiusmod tempor incididunt u')
      , ('edb1f866-6c1b-4379-8abe-18135d236022', ' sed do eiusmod tempor ');
 
-INSERT INTO public.products (product_id, name_product, product_category_id, price, image_id, collection_id, properties, product_description)
+insert into public.products (product_id, name_product, product_category_id, price, image_id, collection_id, properties, product_description)
 VALUES ('1aeddfd8-fe73-463a-8670-32884596e61b', 'd est laborum.Lorem ipsum dolor sit amet, consectetur adip', 1, 123,
         'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, '{"i":"23"}','tttt')
      , ('6f1a625b-0fc7-458b-9afb-1f5c573f57c2', 'dese', 1, 1345, 'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, '{"i":"23"}','tttt')
@@ -51,3 +53,7 @@ VALUES ('1aeddfd8-fe73-463a-8670-32884596e61b', 'd est laborum.Lorem ipsum dolor
         'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, '{"i":"23"}','tttt')
      , ('33ca8fd0-5fc7-484f-be43-9eac73a98be9', 'a qui officia deserunt mol', 1, 100,
         'ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, '{"i":"23"}','tttt');
+
+insert into favorite_category (favorite_category_id, category_id, popular_value)
+values ('c6371c0a-1541-42c2-b460-5b30f8d4c8fc', 1, 1),
+('ea3ab0c5-8186-444c-947c-36cb8904cacd', 2, 2);

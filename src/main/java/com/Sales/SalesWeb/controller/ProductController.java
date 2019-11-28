@@ -1,7 +1,9 @@
 package com.Sales.SalesWeb.controller;
 
 
-import com.Sales.SalesWeb.controller.Handlers.AwesomeExceptionHandler;
+import com.Sales.SalesWeb.controller.exception.InternalServerError;
+import com.Sales.SalesWeb.controller.exception.NoSuchObject;
+import com.Sales.SalesWeb.model.POJO.FavoriteCategoryProductsResponse;
 import com.Sales.SalesWeb.model.Product;
 import com.Sales.SalesWeb.service.ProductsService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -20,41 +24,67 @@ public class ProductController {
         this.productsService = productsService;
     }
 
-    @GetMapping("{id}")
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getProduct(@PathVariable UUID id) {
         Product product;
         try {
-             product = productsService.getProduct(id);
-        }catch(RuntimeException e){
-            throw new AwesomeExceptionHandler.IntermalServerError();
+            product = productsService.getProduct(id);
+        } catch (RuntimeException e) {
             e.printStackTrace();
+            throw new InternalServerError();
         }
         if (product == null) {
-            throw new AwesomeExceptionHandler.NoSuchObject();
+            throw new NoSuchObject();
         }
-
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productsService.createProduct(product), HttpStatus.OK);
+        Product newProduct;
+        try {
+            newProduct = productsService.createProduct(product);
+        } catch (RuntimeException e){
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+        return new ResponseEntity<>(newProduct, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteProduct(@PathVariable("id") Product product) {
-        productsService.deleteProduct(product);
+        try{
+            productsService.deleteProduct(product);
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        throw new InternalServerError();
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateProduct(@PathVariable("id") Product productFromDb, @RequestBody Product productFromReqest) {
-        return new ResponseEntity<>(productsService.updateProduct(productFromDb, productFromReqest), HttpStatus.OK);
+        Map<String, Product> stringProductMap;
+        try{
+            stringProductMap = productsService.updateProduct(productFromDb, productFromReqest);
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+        return new ResponseEntity<>(stringProductMap, HttpStatus.OK);
+
     }
 
-    @PostMapping(value = "favorites",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "favorites", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getFavoriteCategoriesFavoriteProdcuts() {
-        return new ResponseEntity<>(productsService.getFavoriteCategoriesFavoriteProdcuts(), HttpStatus.OK);
+        List<FavoriteCategoryProductsResponse> favoriteCategoriesFavoriteProdcuts;
+        try{
+            favoriteCategoriesFavoriteProdcuts = productsService.getFavoriteCategoriesFavoriteProdcuts();
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+        return new ResponseEntity<>(favoriteCategoriesFavoriteProdcuts, HttpStatus.OK);
     }
 
 }

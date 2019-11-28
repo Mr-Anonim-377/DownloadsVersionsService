@@ -35,7 +35,7 @@ public class Product {
     private Integer collectionId;
 
 //    @Column(name = "properties")
-//    @Type(type = "com.Sale.SalesWeb.model.DataType.JsonType")
+//    @Type(type = "com.Sale.SalesWeb.model.dataType.JsonType")
 //    private JsonElement properties;
     private String properties;
 

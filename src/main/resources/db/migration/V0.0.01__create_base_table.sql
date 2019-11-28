@@ -4,7 +4,6 @@ create EXTENSION IF NOT EXISTS "uuid-ossp";
 create EXTENSION "pgcrypto";
 
 create type baner_location as ENUM ('main_central','main_small');
-create type baners_status as ENUM ('uses','not use');
 
 create TABLE "baners"
 (
@@ -12,7 +11,7 @@ create TABLE "baners"
     "image_id"      uuid           NOT NULL,
     "title"         text,
     "page_location" baner_location not null,
-    "baner_status"  baners_status,
+    "baner_uses_status"  boolean,
     CONSTRAINT "baners_pkey" PRIMARY KEY ("baner_id")
 );
 

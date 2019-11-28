@@ -1,4 +1,4 @@
-package com.Sales.SalesWeb.model.DataType;
+package com.Sales.SalesWeb.model.dataType;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
