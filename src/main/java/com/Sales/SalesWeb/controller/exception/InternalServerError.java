@@ -1,5 +1,8 @@
 package com.Sales.SalesWeb.controller.exception;
 
-public class InternalServerError extends RuntimeException {
+public class InternalServerExeption extends RuntimeException {
+ public InternalServerExeption(String message){
+    super(message);
+  }
 
 }
