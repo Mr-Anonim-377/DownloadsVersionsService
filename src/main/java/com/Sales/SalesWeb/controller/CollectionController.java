@@ -30,7 +30,7 @@ public class CollectionController {
             collection = collectionService.getCollect(id);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new InternalServerError();
+            throw new InternalServerException ("test");
         }
         if (collection == null) {
             throw new NoSuchObject();
