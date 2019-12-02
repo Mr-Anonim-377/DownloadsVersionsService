@@ -25,7 +25,7 @@ public class AwesomeExceptionHandler extends ResponseEntityExceptionHandler {
     }
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ExceptionResponse> handleNoHttpValidationParametrs() {
-        return new ResponseEntity<>(new ExceptionResponse(LocalDateTime.now().format(formatter), "No Valid json","ArgumentTypeMismatch"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ExceptionResponse(LocalDateTime.now().format(formatter), "No Valid request param","ArgumentTypeMismatch"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InternalServerError.class)
