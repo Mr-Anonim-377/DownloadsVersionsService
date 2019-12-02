@@ -28,10 +28,12 @@ public class AwesomeExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ExceptionResponse(LocalDateTime.now().format(formatter), "No Valid request param","ArgumentTypeMismatch"), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InternalServerError.class)
-    protected ResponseEntity<ExceptionResponse> handleIntermalServerError() {
-        return new ResponseEntity<>(new ExceptionResponse(LocalDateTime.now().format(formatter), "Server Error","IntermalServerError"), HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(InternalServerException .class)
+    protected ResponseEntity<ExceptionResponse> handleIntermalServerError(Exception exc) {
+        return new ResponseEntity<>(new ExceptionResponse(LocalDateTime.now().format(formatter), "Server Error",exc.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+   
 
 
     @Data
